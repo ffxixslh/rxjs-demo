@@ -50,15 +50,18 @@ function Demo2() {
       observer.next(3);
       observer.complete();
       return () => {
-        // TODO 没有打印
-        console.log('succes')
+        console.log('success')
       }
     });
 
-    observable.subscribe({
+    const subscription = observable.subscribe({
       next: (value) => console.log('we got', value),
       complete: () => console.log('completed'),
     });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (
