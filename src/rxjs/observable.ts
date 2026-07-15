@@ -40,8 +40,12 @@ export class Observer<T> {
     error?: ErrorFn,
     complete?: CompleteFn
   ) {
+    // nothing
+    if (!nextObjectOfFn) {
+      return
+    }
     // is object
-    if (nextObjectOfFn && 'next' in nextObjectOfFn) {
+    if ('next' in nextObjectOfFn) {
       this._next = nextObjectOfFn.next || noop
       this._error = nextObjectOfFn.error || noop
       this._complete = nextObjectOfFn.complete || noop
@@ -139,8 +143,16 @@ export class Observable<T> {
     return observable
   }
 
-  public pipe(...fns: OperatorFn<T>[]) {
-    return fns.reduce((acc, fn) => fn(acc) as typeof this, this)
+  pipe(): Observable<T>;
+  pipe<A>(op1: OperatorFn<T, A>): Observable<A>;
+  pipe<A, B>(op1: OperatorFn<T, A>, op2: OperatorFn<A, B>): Observable<B>;
+  pipe<A, B, C>(op1: OperatorFn<T, A>, op2: OperatorFn<A, B>, op3: OperatorFn<B, C>): Observable<C>;
+  pipe<A, B, C, D>(op1: OperatorFn<T, A>, op2: OperatorFn<A, B>, op3: OperatorFn<B, C>, op4: OperatorFn<C, D>): Observable<D>;
+  pipe<A, B, C, D, E>(op1: OperatorFn<T, A>, op2: OperatorFn<A, B>, op3: OperatorFn<B, C>, op4: OperatorFn<C, D>, op5: OperatorFn<D, E>): Observable<E>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public pipe(...fns: OperatorFn<any, any>[]) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return fns.reduce<Observable<any>>((acc, fn) => fn(acc), this)
   }
 }
 
