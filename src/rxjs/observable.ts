@@ -103,9 +103,6 @@ export class Observable<T> {
   private operator?: Operator<T>
 
   constructor(publish?: PublishFn<T>) {
-    if (!publish) {
-      return;
-    }
     this.publish = publish
   }
 
