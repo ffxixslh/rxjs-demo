@@ -1,14 +1,8 @@
 import type { Operator, OperatorFn } from "./operators"
 
-interface NextFn<T> {
+interface ObserverFn<T> {
   (value: T): void
 }
-type NextObject<T> = {
-  next: NextFn<T>
-  error: ErrorFn
-  complete: CompleteFn
-}
-type NextObjectOrFn<T> = NextObject<T> | NextFn<T>
 interface ErrorFn {
   (error: Error): void
 }
@@ -21,7 +15,7 @@ interface NoopFn {
 function noop() { }
 
 interface ObserverObject<T> {
-  next: NextFn<T>
+  next: ObserverFn<T>
   error: ErrorFn
   complete: CompleteFn
 }
@@ -29,14 +23,14 @@ interface ObserverObject<T> {
 type ObserverLike<T> = Observer<T> | ObserverObject<T>
 
 export class Observer<T> {
-  private _next?: NextFn<T>
+  private _next?: ObserverFn<T>
   private _error?: ErrorFn
   private _complete?: CompleteFn
   private isStop: boolean = false
   private unsubscribeCB?: NoopFn
 
   constructor(
-    nextObjectOfFn?: NextObjectOrFn<T>,
+    nextObjectOfFn?: ObserverLike<T> | ObserverFn<T>,
     error?: ErrorFn,
     complete?: CompleteFn
   ) {
