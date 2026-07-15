@@ -4,9 +4,9 @@ interface NextFn<T> {
   (value: T): void
 }
 type NextObject<T> = {
-  next?: NextFn<T>
-  error?: ErrorFn
-  complete?: CompleteFn
+  next: NextFn<T>
+  error: ErrorFn
+  complete: CompleteFn
 }
 type NextObjectOrFn<T> = NextObject<T> | NextFn<T>
 interface ErrorFn {
@@ -21,9 +21,9 @@ interface NoopFn {
 function noop() { }
 
 interface ObserverObject<T> {
-  next?: NextFn<T>
-  error?: ErrorFn
-  complete?: CompleteFn
+  next: NextFn<T>
+  error: ErrorFn
+  complete: CompleteFn
 }
 
 type ObserverLike<T> = Observer<T> | ObserverObject<T>
@@ -107,7 +107,7 @@ export class Observable<T> {
   }
 
   public subscribe(
-    observerLike: ObserverLike<T>,
+    observerLike: Partial<ObserverLike<T>>,
     error?: ErrorFn,
     complete?: CompleteFn
   ) {

@@ -1,4 +1,4 @@
-import { fromEvent, interval } from "@/rxjs/observable";
+import { fromEvent, interval, Observable } from "@/rxjs/observable";
 import { map } from "@/rxjs/operators";
 import { useEffect, useRef, useState } from "react"
 
@@ -42,6 +42,24 @@ function Demo2() {
       subscription.unsubscribe()
     }
   }, [])
+
+  useEffect(() => {
+    const observable = new Observable<number>(observer => {
+      observer.next(1);
+      observer.next(2);
+      observer.next(3);
+      observer.complete();
+      return () => {
+        // TODO 没有打印
+        console.log('succes')
+      }
+    });
+
+    observable.subscribe({
+      next: (value) => console.log('we got', value),
+      complete: () => console.log('completed'),
+    });
+  }, []);
 
   return (
     <div style={{
